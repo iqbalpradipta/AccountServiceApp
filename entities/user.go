@@ -1,10 +1,10 @@
 package entities
 
-
-type user struct{
+type User struct{
 	id				string
 	user_id			string
 	name			string
+	password		string
 	alamat			string
 	jenis_kelamin	string
 	telp			string
