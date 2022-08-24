@@ -76,5 +76,14 @@ func main() {
 				}
 			}
 		}
+	case 4:
+		var update string
+		result, err := user.UpdateUser(db)
+		if err != nil {
+			update = "Nomor Handphone tidak ditemukan"
+		} else {
+			update = fmt.Sprint("Data User: ", "\n", result.Contact, "\n", "berhasil diupdate")
+		}
+		fmt.Println(update)
 	}
 }
