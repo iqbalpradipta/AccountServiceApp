@@ -7,12 +7,16 @@ import (
 )
 
 func UpdateUser(db *sql.DB) (entities.User, error) {
+	var contact string
+	fmt.Println("Login menggunakan No Handphone")
+	fmt.Scanln(&contact)
+
 	fmt.Println("Pilih Menu Update: ")
-	fmt.Print("1.Update nama\n2.Update Email\n3.Update Password\n")
+	fmt.Print("1.Update nama\n2.Update Jenis Kelamin\n3.Update Password\n")
 	var menu,UpdateNama,UpdateJenisKelamin,UpdatePassword string
 	fmt.Scanln(&menu)
 	var user entities.User
-
+	db.Exec("update User set contact = ?",contact)
 	switch menu {
 		case "1":
 		{

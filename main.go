@@ -48,18 +48,17 @@ func main() {
 		}
 	case 2:
 		{
+			var updateUser = entities.User{}
 			var AccountID int
 			var str = strconv.Itoa(AccountID)
 			fmt.Print("Masukan Nomor Telp anda untuk melanjutkan: ")
-			var telp string
-			fmt.Scanln(&telp)
+			fmt.Scanln(&updateUser.Contact)
 			fmt.Println("Masukan Password anda: ")
-			var pass string
-			fmt.Scanln(&pass)
-			AccountID = user.LoginUserData(db, telp)
+			fmt.Scanln(&updateUser.Password)
+			AccountID = user.LoginUserData(db, updateUser.Contact)
 			passwordAccount := user.LoginUserData(db, str)
-			validPass := user.LoginUserData(db, pass)
-			if AccountID < 0 {
+			validPass := user.LoginUserData(db, updateUser.Password)
+			if AccountID == 0 {
 				fmt.Println("Account anda tidak ditemukan")
 			} else if passwordAccount != validPass {
 				fmt.Println("Password anda salah")

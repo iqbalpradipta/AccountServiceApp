@@ -42,7 +42,7 @@ func InsertUserData(db *sql.DB, inputUser entities.User) (int, error) {
 	}
 }
 func LoginUserData(db *sql.DB, Contact string) int{
-	var query = "SELECT user_id FROM user telp = ?"
+	var query = "SELECT Contact FROM user WHERE telp = ?"
 	var telp int
 	result := db.QueryRow(query, &Contact).Scan(&telp)
 	if result != nil {
