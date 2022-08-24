@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"projectapp/config"
+	"projectapp/controllers/user"
+	"projectapp/entities"
 )
 
 func main() {
@@ -13,4 +15,48 @@ func main() {
 	fmt.Println("Masukan pilihan anda: ")
 	var pilihan int
 	fmt.Scanln(&pilihan)
+
+	switch pilihan{
+	case 1:
+		{
+			inputUser := entities.User{}
+			fmt.Println("Input user_id: ")
+			fmt.Scanln(&inputUser.Id)
+			fmt.Println("Input Nama anda: ")
+			fmt.Scanln(&inputUser.Name)
+			fmt.Println("Input Password anda: ")
+			fmt.Scanln(&inputUser.Password)
+			fmt.Println("Input Alamat anda: ")
+			fmt.Scanln(&inputUser.Alamat)
+			fmt.Println("Input Jenis Kelamin: ")
+			fmt.Println(&inputUser.Jenis_kelamin)
+			fmt.Println("Input Nomor Telpon anda: ")
+			fmt.Scanln(&inputUser.Contact)
+			RowsAffected, err := user.InsertUserData(db, inputUser)
+			if err != nil {
+				fmt.Println("Error Register data", err)
+			}else{
+				if RowsAffected == 0{
+					fmt.Println("Gagal Register data. RowsAffected = 0")
+				}else{
+					fmt.Println("Register data Berhasil. RowsAffected = ", RowsAffected)
+				}
+			}
+		}
+	case 2:
+		{
+			//login account
+		}
+	case 3:
+		{
+			result, err := user.GetUserData(db)
+			if err != nil {
+				fmt.Println("Error membaca data dari database", err)
+			}else{
+				for _, v := range result {
+					fmt.Println("id", v.Id, "user_id", v.User_id, "name",v.Name, "password", v.Password, "alamat", v.Alamat, "jenis_kelamin",v.Jenis_kelamin, "contact", v.Contact, "saldo", v.Saldo, "update_at", v.Update_at)
+				}
+			}
+		}
+	}
 }
