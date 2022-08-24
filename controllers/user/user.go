@@ -25,12 +25,12 @@ func GetUserData(db *sql.DB) ([]entities.User, error) {
 }
 
 func InsertUserData(db *sql.DB, inputUser entities.User) (int, error) {
-	var query = "insert into User (User_id, Name, Password, Alamat, Jenis_kelamin, Contact, Saldo, update_at)values(?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	var query = "insert into User (id, User_id, Name, Password, Alamat, Jenis_kelamin, Contact, Saldo)values(?, ?, ?, ?, ?, ?, ?, ?)"
 	statement, errPrepare := db.Prepare(query)
 	if errPrepare != nil {
 		return -1, errPrepare
 	}
-	result, errExec := statement.Exec(inputUser.User_id, inputUser.Name, inputUser.Password, inputUser.Alamat, inputUser.Jenis_kelamin, inputUser.Contact, inputUser.Saldo, inputUser.Update_at)
+	result, errExec := statement.Exec(inputUser.Id, inputUser.User_id, inputUser.Name, inputUser.Password, inputUser.Alamat, inputUser.Jenis_kelamin, inputUser.Contact, inputUser.Saldo)
 	if errExec != nil {
 		return -1, errExec
 	}else {

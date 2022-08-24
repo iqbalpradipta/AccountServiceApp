@@ -21,8 +21,10 @@ func main() {
 	case 1:
 		{
 			inputUser := entities.User{}
-			fmt.Println("Input user_id: ")
+			fmt.Println("Input id ")
 			fmt.Scanln(&inputUser.Id)
+			fmt.Println("Input user_id: ")
+			fmt.Scanln(&inputUser.User_id)
 			fmt.Println("Input Nama anda: ")
 			fmt.Scanln(&inputUser.Name)
 			fmt.Println("Input Password anda: ")
@@ -72,7 +74,15 @@ func main() {
 				fmt.Println("Error membaca data dari database", err)
 			} else {
 				for _, v := range result {
-					fmt.Println("id", v.Id, "user_id", v.User_id, "name", v.Name, "password", v.Password, "alamat", v.Alamat, "jenis_kelamin", v.Jenis_kelamin, "contact", v.Contact, "saldo", v.Saldo, "update_at", v.Update_at)
+					fmt.Println("id:", v.Id)
+					fmt.Println("user_id:", v.User_id)
+					fmt.Println("name:", v.Name)
+					fmt.Println("password:", v.Password)
+					fmt.Println("alamat:", v.Alamat)
+					fmt.Println("jenis_kelamin:", v.Jenis_kelamin)
+					fmt.Println("contact:", v.Contact)
+					fmt.Println("saldo:", v.Saldo)
+					fmt.Println("update_at:", v.Update_at)
 				}
 			}
 		}
