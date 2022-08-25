@@ -41,15 +41,56 @@ func InsertUserData(db *sql.DB, inputUser entities.User) (int, error) {
 		return int(row), nil
 	}
 }
-func LoginUserData(db *sql.DB, Contact string) int{
-	var query = "SELECT Contact FROM user WHERE telp = ?"
-	var telp int
-	result := db.QueryRow(query, &Contact).Scan(&telp)
-	if result != nil {
-		if result == sql.ErrNoRows {
-			return -1
-		}
-		return -1
+func LoginUserData(db *sql.DB) ([]entities.User, error){
+	var query = "SELECT contact, password FROM user"
+	result, errselect := db.Query(query)
+	if errselect != nil {
+		return nil, errselect
 	}
-	return telp
+	var infoUser []entities.User
+	for result.Next() {
+		var rowuser entities.User
+		errScan := result.Scan(&rowuser.Contact, &rowuser.Password)
+		if errScan != nil {
+			return nil, errScan
+		}
+		infoUser = append(infoUser, rowuser)
+	}
+	return infoUser, nil
+}
+
+func DeleteUserData(db *sql.DB, deleteUser entities.User) (int,error){
+	var query = "delete from User WHERE id = ?"
+	statement, err := db.Prepare(query)
+	if err != nil {
+		return -1 ,err
+	}
+	result, errExec := statement.Exec(deleteUser.Id)
+	if errExec != nil {
+		return -1, errExec
+	}else {
+		row, errRow := result.RowsAffected()
+		if errRow != nil {
+			return 0, nil
+		}
+		return int(row), nil
+	}
+}
+
+func UpdateData(db *sql.DB, updateUser entities.User) (int, error)  {
+	var query = "Update User SET Name = ? WHERE id = ?"
+	statement, err := db.Prepare(query)
+	if err != nil {
+		return -1 ,err
+	}
+	result, errExec := statement.Exec(updateUser.Name, updateUser.Id)
+	if errExec != nil {
+		return -1, errExec
+	}else {
+		row, errRow := result.RowsAffected()
+		if errRow != nil {
+			return 0, nil
+		}
+		return int(row), nil
+	}
 }
