@@ -5,6 +5,19 @@ import (
 	"projectapp/entities"
 )
 
+func GetIdUsersByTelp(db *sql.DB, Contact string) int {
+	var query = "SELECT user_id FROM users WHERE telp = ?"
+	var id int
+	result := db.QueryRow(query, &Contact).Scan(&id)
+	if result != nil {
+		if result == sql.ErrNoRows {
+			return -1
+		}
+		return -1
+	}
+	return id
+}
+
 func GetUserData(db *sql.DB) ([]entities.User, error) {
 	var query = "SELECT Id, user_id, name, password, alamat, contact, saldo, update_at FROM user"
 	result, errselect := db.Query(query)
@@ -120,6 +133,26 @@ func PostTambahSaldo(db *sql.DB, idUser int, nominal int) (int, error) {
 		return 0, errSaldo
 	}
 	var newSaldo = nominal + saldo
+	result, err := statement.Exec(&newSaldo, &idUser)
+	if err != nil {
+		return 0, err
+	} else {
+		row, _ := result.RowsAffected()
+		return int(row), nil
+	}
+}
+
+func PostKurangSaldo(db *sql.DB, idUser int, jumlah_transfer int) (int, error) {
+	var query = "update user set Saldo = (?) where user_id = (?)"
+	statement, errPrepare := db.Prepare(query)
+	if errPrepare != nil {
+		return 0, errPrepare
+	}
+	saldo, errSaldo := GetUserSaldo(db, idUser)
+	if errSaldo != nil {
+		return 0, errSaldo
+	}
+	var newSaldo = saldo - jumlah_transfer
 	result, err := statement.Exec(&newSaldo, &idUser)
 	if err != nil {
 		return 0, err

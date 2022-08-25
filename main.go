@@ -5,6 +5,7 @@ import (
 	"projectapp/config"
 	_user "projectapp/controllers/user"
 	_topup "projectapp/controllers/topup"
+	_transfer "projectapp/controllers/transfer"
 	"projectapp/entities"
 	// "strconv"
 )
@@ -51,16 +52,13 @@ func main() {
 		fmt.Scanln(&loginUser.Contact)
 		fmt.Println("Input Password anda: ")
 		fmt.Scanln(&loginUser.Password)
-		result, err := _user.LoginUserData(db)
+		_, err := _user.LoginUserData(db)
 		if err != nil {
 			fmt.Println("Error Login", err)
 		} else {
 			if err != nil {
 				fmt.Println("login gagal")
 			} else {
-				for _, v := range result {
-					fmt.Println("contact:", v.Contact)
-				}
 				fmt.Println("login Sukses. selamat datang")
 			}
 		}
@@ -71,6 +69,7 @@ func main() {
 				fmt.Println("Error membaca data dari database", err)
 			} else {
 				for _, v := range result {
+					fmt.Println("=================================")
 					fmt.Println("id:", v.Id)
 					fmt.Println("user_id:", v.User_id)
 					fmt.Println("name:", v.Name)
@@ -117,8 +116,9 @@ func main() {
 			}
 		}
 	case 6:
-		var idAccount int
-		var jumlah_top_up uint
+		{
+			var idAccount int
+			var jumlah_top_up uint
 			fmt.Print("Silahkan Masukkan Nominal Top Up: ")
 			fmt.Scan(&jumlah_top_up)
 			fmt.Print("\n")
@@ -129,5 +129,38 @@ func main() {
 				fmt.Println("Top Up Berhasil")
 			}
 			fmt.Print("\n")
+		}
+	case 7:
+		{
+			fmt.Println("Masukan nomor Penerima: ")
+			var telpPenerima string
+			fmt.Scan(&telpPenerima)
+			fmt.Print("\n")
+			fmt.Print("Masukkan Nominal Transfer: ")
+			var nominal uint
+			fmt.Scan(&nominal)
+			fmt.Print("\n")
+			var idPenerima = _user.GetIdUsersByTelp(db, telpPenerima)
+			var idPengirim int
+			_, err := _transfer.PostTransfer(db, idPengirim, idPenerima, int(nominal))
+			if err != nil {
+				fmt.Println(err.Error())
+			} else {
+				fmt.Println("Transfer Berhasil")
+			}
+		}
+	case 8:
+		{
+			var idAccount int
+			fmt.Println("History Top Up Account Anda:")
+			result, err := _topup.GetHistoryTopUpById(db, idAccount)
+			if err != nil {
+				fmt.Println(err.Error())
+			} else {
+				for _, v := range result {
+					fmt.Print("Nominal Top up: ", v.Jumlah_top_up, "\n")
+				}
+			}
+		}
 	}
 }
