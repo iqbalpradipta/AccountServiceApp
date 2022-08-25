@@ -27,7 +27,7 @@ func GetAllTopUp(db *sql.DB) ([]entities.Topup, error) {
 }
 
 func GetHistoryTopUpById(db *sql.DB, idUser int) ([]entities.Topup, error) {
-	var query = "select id , user_id , jumlah_top_up from Topup where user_id = ? order by id desc"
+	var query = "select id , user_id , jumlah_top_up from Topup where id = ? order by id desc"
 	statement, errPrepare := db.Prepare(query)
 	if errPrepare != nil {
 		return []entities.Topup{}, errPrepare
@@ -49,7 +49,7 @@ func GetHistoryTopUpById(db *sql.DB, idUser int) ([]entities.Topup, error) {
 }
 
 func PostTopUp(db *sql.DB, idUser int, jumlah_top_up int) (int, error) {
-	var query = "insert into Topup (user_id,jumlah_top_up) values (?,?)"
+	var query = "insert into Topup (id,jumlah_top_up) values (?,?)"
 	statement, errPrepare := db.Prepare(query)
 	if errPrepare != nil {
 		return 0, errPrepare

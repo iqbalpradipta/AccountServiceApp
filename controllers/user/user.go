@@ -96,7 +96,7 @@ func UpdateData(db *sql.DB, updateUser entities.User) (int, error)  {
 }
 
 func GetUserSaldo(db *sql.DB, idUser int) (int, error) {
-	var query = "SELECT saldo FROM users WHERE user_id = ?"
+	var query = "SELECT saldo FROM user WHERE id = ?"
 	var saldo int
 	result := db.QueryRow(query, &idUser).Scan(&saldo)
 	if result != nil {
@@ -110,7 +110,7 @@ func GetUserSaldo(db *sql.DB, idUser int) (int, error) {
 
 
 func PostTambahSaldo(db *sql.DB, idUser int, nominal int) (int, error) {
-	var query = "update users set saldo = (?) where user_id = (?)"
+	var query = "update user set saldo = (?) where id = (?)"
 	statement, errPrepare := db.Prepare(query)
 	if errPrepare != nil {
 		return 0, errPrepare
