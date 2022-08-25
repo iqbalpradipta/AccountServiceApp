@@ -162,5 +162,32 @@ func main() {
 				}
 			}
 		}
+	case 9:
+		{
+			var idAccount int
+			fmt.Println("History Transfer Account Anda:")
+			result, err := _transfer.GetHistoryTransferById(db, idAccount)
+			if err != nil {
+				fmt.Println(err.Error())
+			} else {
+				for _, v := range result {
+					fmt.Printf("Nama Pengirim: %s \t Nama Penerima: %s \n", v.NamaPengirim, v.NamaPenerima)
+					fmt.Printf("Nominal: %d \t Sisa Saldo: %d \n", v.Jumlah_transfer, v.Jumlah_transfer)
+				}
+			}
+			fmt.Print("\n")
+		}
+	case 10:
+		{
+			fmt.Print("Masukkan Id orang lain: ")
+			var id string
+			fmt.Scanln(&id)
+			result := _user.ReadUserInfo(db, id)
+			fmt.Println("Profil Account Lain")
+			fmt.Println("Nama: ", result.Name)
+			fmt.Println("Nomor Telpon: ", result.Contact)
+			fmt.Println("Saldo: ", result.Saldo)
+			fmt.Print("\n")
+		}
 	}
 }

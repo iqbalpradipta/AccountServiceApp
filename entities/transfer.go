@@ -7,8 +7,7 @@ type Transfer struct {
 	Jumlah_transfer		int
 }
 type HistoryTransfer struct {
-	NamaPengirim string
-	NamaPenerima string
-	Nominal      int
-	SisaSaldo    int
+	NamaPengirim 		string
+	NamaPenerima 		string
+	Jumlah_transfer      int
 }

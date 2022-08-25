@@ -26,20 +26,20 @@ func GetAllTopUp(db *sql.DB) ([]entities.Topup, error) {
 	return userData, nil
 }
 
-func GetHistoryTopUpById(db *sql.DB, id int) ([]entities.Topup, error) {
+func GetHistoryTopUpById(db *sql.DB, idUser int) ([]entities.Topup, error) {
 	var query = "select id , user_id , jumlah_top_up from Topup where id = ? order by id desc"
 	statement, errPrepare := db.Prepare(query)
 	if errPrepare != nil {
 		return []entities.Topup{}, errPrepare
 	}
-	result, err := statement.Query(&id)
+	result, err := statement.Query(&idUser)
 	if err != nil {
 		return []entities.Topup{}, err
 	}
 	var historyTopUp = []entities.Topup{}
 	for result.Next() {
 		var topup = entities.Topup{}
-		err := result.Scan(&topup.Id, &topup.User_id, &topup.Jumlah_top_up)
+		err := result.Scan(&topup)
 		if err != nil {
 			return []entities.Topup{}, err
 		}

@@ -161,3 +161,16 @@ func PostKurangSaldo(db *sql.DB, idUser int, jumlah_transfer int) (int, error) {
 		return int(row), nil
 	}
 }
+
+func ReadUserInfo(db *sql.DB, id string) entities.User {
+	results := db.QueryRow("SELECT id, name, Contact, saldo from users where User_id = ?", &id)
+
+	var dataUser entities.User
+	err := results.Scan(&dataUser.Id, &dataUser.Name, &dataUser.Contact, &dataUser.Saldo)
+
+	if err != nil {
+		return entities.User{}
+	}
+
+	return dataUser
+}

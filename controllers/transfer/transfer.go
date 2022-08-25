@@ -1,4 +1,5 @@
 package controllers
+
 import (
 	"database/sql"
 	"fmt"
@@ -6,7 +7,7 @@ import (
 	"projectapp/entities"
 )
 
-func GetTransferData(db *sql.DB) ([]entities.Transfer, error){
+func GetTransferData(db *sql.DB) ([]entities.Transfer, error) {
 	var query = "select id, user_id_pengirim, user_id_penerima, jumlah_transfer from Transfer"
 	statement, errPrepare := db.Prepare(query)
 	if errPrepare != nil {
@@ -61,4 +62,26 @@ func PostTransfer(db *sql.DB, idPengirim int, idPenerima int, jumlah_transfer in
 		rowTopUp, _ := result.RowsAffected()
 		return int(rowTopUp), nil
 	}
+}
+
+func GetHistoryTransferById(db *sql.DB, idUser int) ([]entities.HistoryTransfer, error) {
+	var query = "select us.name, ur.name, tf.jumlah_transfer from transfer tf inner join user us on tf.user_id_pengirim = us.user_id inner join user ur on tf.user_id_penerima = ur.user_id where us.user_id = ? order by tf.id desc"
+	statement, errPrepare := db.Prepare(query)
+	if errPrepare != nil {
+		return []entities.HistoryTransfer{}, errPrepare
+	}
+	result, err := statement.Query(&idUser)
+	if err != nil {
+		return []entities.HistoryTransfer{}, err
+	}
+	var historyTransfer = []entities.HistoryTransfer{}
+	for result.Next() {
+		var transfer = entities.HistoryTransfer{}
+		err := result.Scan(&transfer.NamaPengirim, &transfer.NamaPenerima, &transfer.Jumlah_transfer)
+		if err != nil {
+			return []entities.HistoryTransfer{}, err
+		}
+		historyTransfer = append(historyTransfer, transfer)
+	}
+	return historyTransfer, nil
 }
