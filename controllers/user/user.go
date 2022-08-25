@@ -6,7 +6,7 @@ import (
 )
 
 func GetUserData(db *sql.DB) ([]entities.User, error) {
-	var query = "SELECT Id, user_id, name, password, alamat, jenis_kelamin, contact, saldo, update_at FROM user"
+	var query = "SELECT Id, user_id, name, password, alamat, contact, saldo, update_at FROM user"
 	result, errselect := db.Query(query)
 	if errselect != nil {
 		return nil, errselect
@@ -15,7 +15,7 @@ func GetUserData(db *sql.DB) ([]entities.User, error) {
 	var userData []entities.User
 	for result.Next() {
 		var rowuser entities.User
-		errScan := result.Scan(&rowuser.Id, &rowuser.User_id, &rowuser.Name, &rowuser.Password, &rowuser.Alamat, &rowuser.Jenis_kelamin, &rowuser.Contact, &rowuser.Saldo, &rowuser.Update_at)
+		errScan := result.Scan(&rowuser.Id, &rowuser.User_id, &rowuser.Name, &rowuser.Password, &rowuser.Alamat, &rowuser.Contact, &rowuser.Saldo, &rowuser.Update_at)
 		if errScan != nil {
 			return nil, errScan
 		}
@@ -25,12 +25,12 @@ func GetUserData(db *sql.DB) ([]entities.User, error) {
 }
 
 func InsertUserData(db *sql.DB, inputUser entities.User) (int, error) {
-	var query = "insert into User (id, User_id, Name, Password, Alamat, Jenis_kelamin, Contact, Saldo)values(?, ?, ?, ?, ?, ?, ?, ?)"
+	var query = "insert into User (id, User_id, Name, Password, Alamat, Contact, Saldo)values(?, ?, ?, ?, ?, ?, ?)"
 	statement, errPrepare := db.Prepare(query)
 	if errPrepare != nil {
 		return -1, errPrepare
 	}
-	result, errExec := statement.Exec(inputUser.Id, inputUser.User_id, inputUser.Name, inputUser.Password, inputUser.Alamat, inputUser.Jenis_kelamin, inputUser.Contact, inputUser.Saldo)
+	result, errExec := statement.Exec(inputUser.Id, inputUser.User_id, inputUser.Name, inputUser.Password, inputUser.Alamat, inputUser.Contact, inputUser.Saldo)
 	if errExec != nil {
 		return -1, errExec
 	}else {
