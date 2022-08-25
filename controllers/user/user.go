@@ -1,4 +1,4 @@
-package user
+package controllers
 
 import (
 	"database/sql"
@@ -91,6 +91,40 @@ func UpdateData(db *sql.DB, updateUser entities.User) (int, error)  {
 		if errRow != nil {
 			return 0, nil
 		}
+		return int(row), nil
+	}
+}
+
+func GetUserSaldo(db *sql.DB, idUser int) (int, error) {
+	var query = "SELECT saldo FROM user WHERE id = ?"
+	var saldo int
+	result := db.QueryRow(query, &idUser).Scan(&saldo)
+	if result != nil {
+		if result == sql.ErrNoRows {
+			return -1, result
+		}
+		return -1, result
+	}
+	return saldo, nil
+}
+
+
+func PostTambahSaldo(db *sql.DB, idUser int, nominal int) (int, error) {
+	var query = "update user set saldo = (?) where id = (?)"
+	statement, errPrepare := db.Prepare(query)
+	if errPrepare != nil {
+		return 0, errPrepare
+	}
+	saldo, errSaldo := GetUserSaldo(db, idUser)
+	if errSaldo != nil {
+		return 0, errSaldo
+	}
+	var newSaldo = nominal + saldo
+	result, err := statement.Exec(&newSaldo, &idUser)
+	if err != nil {
+		return 0, err
+	} else {
+		row, _ := result.RowsAffected()
 		return int(row), nil
 	}
 }
