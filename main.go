@@ -5,7 +5,7 @@ import (
 	"projectapp/config"
 	"projectapp/controllers/user"
 	"projectapp/entities"
-	"strconv"
+	// "strconv"
 )
 
 func main() {
@@ -47,24 +47,22 @@ func main() {
 			}
 		}
 	case 2:
-		{
-			var AccountID int
-			var str = strconv.Itoa(AccountID)
-			fmt.Print("Masukan Nomor Telp anda untuk melanjutkan: ")
-			var telp string
-			fmt.Scanln(&telp)
-			fmt.Println("Masukan Password anda: ")
-			var pass string
-			fmt.Scanln(&pass)
-			AccountID = user.LoginUserData(db, telp)
-			passwordAccount := user.LoginUserData(db, str)
-			validPass := user.LoginUserData(db, pass)
-			if AccountID < 0 {
-				fmt.Println("Account anda tidak ditemukan")
-			} else if passwordAccount != validPass {
-				fmt.Println("Password anda salah")
+		loginUser := entities.User{}
+		fmt.Println("Input Nomor Telpon anda: ")
+		fmt.Scanln(&loginUser.Contact)
+		fmt.Println("Input Password anda: ")
+		fmt.Scanln(&loginUser.Password)
+		result, err := user.LoginUserData(db)
+		if err != nil {
+			fmt.Println("Error Login", err)
+		} else {
+			if err != nil {
+				fmt.Println("login gagal")
 			} else {
-				fmt.Println("Account Terdaftar. Terima kasih sudah login ^-^")
+				for _, v := range result {
+					fmt.Println("contact:", v.Contact)
+				}
+				fmt.Println("login Sukses. selamat datang")
 			}
 		}
 	case 3:
@@ -87,13 +85,38 @@ func main() {
 			}
 		}
 	case 4:
-		var update string
-		result, err := user.UpdateUser(db)
-		if err != nil {
-			update = "Nomor Handphone tidak ditemukan"
-		} else {
-			update = fmt.Sprint("Data User: ", "\n", result.Contact, "\n", "berhasil diupdate")
+		{
+			var updateData = entities.User{}
+			fmt.Println("Name ID:")
+			fmt.Scanln(&updateData.Id)
+			fmt.Println("Update nama: ")
+			fmt.Scanln(&updateData.Name)
+			update, err := user.UpdateData(db, updateData)
+			if err != nil {
+				fmt.Println("Error Update data", err)
+			} else {
+				if update == 0 {
+					fmt.Println("Gagal update data. RowsAffected = 0")
+				} else {
+					fmt.Println("Update data Berhasil. RowsAffected = ", update)
+				}
+			}
 		}
-		fmt.Println(update)
+	case 5:
+		{
+			var deleteUser = entities.User{}
+			fmt.Println("Delete Account dengan id:")
+			fmt.Scanln(&deleteUser.Id)
+			delete, err := user.DeleteUserData(db, deleteUser)
+			if err != nil {
+				fmt.Println("Error Delete data", err)
+			} else {
+				if delete == 0 {
+					fmt.Println("Gagal Delete data. RowsAffected = 0")
+				} else {
+					fmt.Println("Deleted data Berhasil. RowsAffected = ", delete)
+				}
+			}
+		}
 	}
 }
