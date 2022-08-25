@@ -3,7 +3,8 @@ package main
 import (
 	"fmt"
 	"projectapp/config"
-	"projectapp/controllers/user"
+	_user "projectapp/controllers/user"
+	_topup "projectapp/controllers/topup"
 	"projectapp/entities"
 	// "strconv"
 )
@@ -35,7 +36,7 @@ func main() {
 			fmt.Println(&inputUser.Jenis_kelamin)
 			fmt.Println("Input Nomor Telpon anda: ")
 			fmt.Scanln(&inputUser.Contact)
-			RowsAffected, err := user.InsertUserData(db, inputUser)
+			RowsAffected, err := _user.InsertUserData(db, inputUser)
 			if err != nil {
 				fmt.Println("Error Register data", err)
 			} else {
@@ -52,7 +53,7 @@ func main() {
 		fmt.Scanln(&loginUser.Contact)
 		fmt.Println("Input Password anda: ")
 		fmt.Scanln(&loginUser.Password)
-		result, err := user.LoginUserData(db)
+		result, err := _user.LoginUserData(db)
 		if err != nil {
 			fmt.Println("Error Login", err)
 		} else {
@@ -67,7 +68,7 @@ func main() {
 		}
 	case 3:
 		{
-			result, err := user.GetUserData(db)
+			result, err := _user.GetUserData(db)
 			if err != nil {
 				fmt.Println("Error membaca data dari database", err)
 			} else {
@@ -91,7 +92,7 @@ func main() {
 			fmt.Scanln(&updateData.Id)
 			fmt.Println("Update nama: ")
 			fmt.Scanln(&updateData.Name)
-			update, err := user.UpdateData(db, updateData)
+			update, err := _user.UpdateData(db, updateData)
 			if err != nil {
 				fmt.Println("Error Update data", err)
 			} else {
@@ -107,7 +108,7 @@ func main() {
 			var deleteUser = entities.User{}
 			fmt.Println("Delete Account dengan id:")
 			fmt.Scanln(&deleteUser.Id)
-			delete, err := user.DeleteUserData(db, deleteUser)
+			delete, err := _user.DeleteUserData(db, deleteUser)
 			if err != nil {
 				fmt.Println("Error Delete data", err)
 			} else {
@@ -118,5 +119,18 @@ func main() {
 				}
 			}
 		}
+	case 6:
+		var idAccount int
+		var jumlah_top_up uint
+			fmt.Print("Silahkan Masukkan Nominal Top Up: ")
+			fmt.Scan(&jumlah_top_up)
+			fmt.Print("\n")
+			_, err := _topup.PostTopUp(db, idAccount, int(jumlah_top_up))
+			if err != nil {
+				fmt.Println(err.Error())
+			} else {
+				fmt.Println("Top Up Berhasil")
+			}
+			fmt.Print("\n")
 	}
 }
