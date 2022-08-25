@@ -6,7 +6,6 @@ type User struct {
 	Name          string
 	Password      string
 	Alamat        string
-	Jenis_kelamin string
 	Contact       string
 	Saldo         int
 	Update_at     string
