@@ -3,11 +3,10 @@ package main
 import (
 	"fmt"
 	"projectapp/config"
-	_user "projectapp/controllers/user"
 	_topup "projectapp/controllers/topup"
 	_transfer "projectapp/controllers/transfer"
+	_user "projectapp/controllers/user"
 	"projectapp/entities"
-	// "strconv"
 )
 
 func main() {
@@ -117,12 +116,14 @@ func main() {
 		}
 	case 6:
 		{
-			var idAccount int
-			var jumlah_top_up uint
+			topupUser := entities.Topup{}
+			var id int
+			fmt.Println("Masukan ID: ")
+			fmt.Println(&topupUser.Id)
 			fmt.Print("Silahkan Masukkan Nominal Top Up: ")
-			fmt.Scan(&jumlah_top_up)
+			fmt.Scan(&topupUser.Jumlah_top_up)
 			fmt.Print("\n")
-			_, err := _topup.PostTopUp(db, idAccount, int(jumlah_top_up))
+			_, err := _topup.PostTopUp(db, id, int(topupUser.Jumlah_top_up))
 			if err != nil {
 				fmt.Println(err.Error())
 			} else {
@@ -158,7 +159,8 @@ func main() {
 				fmt.Println(err.Error())
 			} else {
 				for _, v := range result {
-					fmt.Print("Nominal Top up: ", v.Jumlah_top_up, "\n")
+					fmt.Println("User_id:", v.User_id)
+					fmt.Println("Nominal Top up: ", v.Jumlah_top_up)
 				}
 			}
 		}

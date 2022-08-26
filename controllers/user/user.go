@@ -96,7 +96,7 @@ func UpdateData(db *sql.DB, updateUser entities.User) (int, error)  {
 	if err != nil {
 		return -1 ,err
 	}
-	result, errExec := statement.Exec(updateUser.Name, updateUser.Id)
+	result, errExec := statement.Exec(updateUser.Name)
 	if errExec != nil {
 		return -1, errExec
 	}else {
@@ -123,7 +123,7 @@ func GetUserSaldo(db *sql.DB, idUser int) (int, error) {
 
 
 func PostTambahSaldo(db *sql.DB, idUser int, nominal int) (int, error) {
-	var query = "update user set saldo = (?) where id = (?)"
+	var query = "update user set saldo = (?) where user_id = (?)"
 	statement, errPrepare := db.Prepare(query)
 	if errPrepare != nil {
 		return 0, errPrepare
