@@ -3,10 +3,10 @@ package main
 import (
 	"fmt"
 	"projectapp/config"
-	_user "projectapp/controllers/user"
 	_topup "projectapp/controllers/topup"
+	_transfer "projectapp/controllers/transfer"
+	_user "projectapp/controllers/user"
 	"projectapp/entities"
-	// "strconv"
 )
 
 func main() {
@@ -51,16 +51,13 @@ func main() {
 		fmt.Scanln(&loginUser.Contact)
 		fmt.Println("Input Password anda: ")
 		fmt.Scanln(&loginUser.Password)
-		result, err := _user.LoginUserData(db)
+		_, err := _user.LoginUserData(db)
 		if err != nil {
 			fmt.Println("Error Login", err)
 		} else {
 			if err != nil {
 				fmt.Println("login gagal")
 			} else {
-				for _, v := range result {
-					fmt.Println("contact:", v.Contact)
-				}
 				fmt.Println("login Sukses. selamat datang")
 			}
 		}
@@ -71,6 +68,7 @@ func main() {
 				fmt.Println("Error membaca data dari database", err)
 			} else {
 				for _, v := range result {
+					fmt.Println("=================================")
 					fmt.Println("id:", v.Id)
 					fmt.Println("user_id:", v.User_id)
 					fmt.Println("name:", v.Name)
@@ -117,17 +115,81 @@ func main() {
 			}
 		}
 	case 6:
-		var idAccount int
-		var jumlah_top_up uint
+		{
+			topupUser := entities.Topup{}
+			var id int
+			fmt.Println("Masukan ID: ")
+			fmt.Println(&topupUser.Id)
 			fmt.Print("Silahkan Masukkan Nominal Top Up: ")
-			fmt.Scan(&jumlah_top_up)
+			fmt.Scan(&topupUser.Jumlah_top_up)
 			fmt.Print("\n")
-			_, err := _topup.PostTopUp(db, idAccount, int(jumlah_top_up))
+			_, err := _topup.PostTopUp(db, id, int(topupUser.Jumlah_top_up))
 			if err != nil {
 				fmt.Println(err.Error())
 			} else {
 				fmt.Println("Top Up Berhasil")
 			}
 			fmt.Print("\n")
+		}
+	case 7:
+		{
+			fmt.Println("Masukan nomor Penerima: ")
+			var telpPenerima string
+			fmt.Scan(&telpPenerima)
+			fmt.Print("\n")
+			fmt.Print("Masukkan Nominal Transfer: ")
+			var nominal uint
+			fmt.Scan(&nominal)
+			fmt.Print("\n")
+			var idPenerima = _user.GetIdUsersByTelp(db, telpPenerima)
+			var idPengirim int
+			_, err := _transfer.PostTransfer(db, idPengirim, idPenerima, int(nominal))
+			if err != nil {
+				fmt.Println(err.Error())
+			} else {
+				fmt.Println("Transfer Berhasil")
+			}
+		}
+	case 8:
+		{
+			var idAccount int
+			fmt.Println("History Top Up Account Anda:")
+			result, err := _topup.GetHistoryTopUpById(db, idAccount)
+			if err != nil {
+				fmt.Println(err.Error())
+			} else {
+				for _, v := range result {
+					fmt.Println("User_id:", v.User_id)
+					fmt.Println("Nominal Top up: ", v.Jumlah_top_up)
+				}
+			}
+		}
+	case 9:
+		{
+			var idAccount int
+			fmt.Println("History Transfer Account Anda:")
+			result, err := _transfer.GetHistoryTransferById(db, idAccount)
+			if err != nil {
+				fmt.Println(err.Error())
+			} else {
+				for _, v := range result {
+					fmt.Printf("Nama Pengirim: %s \t Nama Penerima: %s \n", v.NamaPengirim, v.NamaPenerima)
+					fmt.Printf("Nominal: %d \t Sisa Saldo: %d \n", v.Jumlah_transfer, v.Jumlah_transfer)
+				}
+			}
+			fmt.Print("\n")
+		}
+	case 10:
+		{
+			fmt.Print("Masukkan Id orang lain: ")
+			var id string
+			fmt.Scanln(&id)
+			result := _user.ReadUserInfo(db, id)
+			fmt.Println("Profil Account Lain")
+			fmt.Println("Nama: ", result.Name)
+			fmt.Println("Nomor Telpon: ", result.Contact)
+			fmt.Println("Saldo: ", result.Saldo)
+			fmt.Print("\n")
+		}
 	}
 }

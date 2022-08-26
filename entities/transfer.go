@@ -1,8 +1,13 @@
 package entities
 
 type Transfer struct {
-	id					string
-	user_id_pengirim	string
-	user_id_penerima	string
-	jumlah_transfer		int
+	Id					string
+	User_id_pengirim	string
+	User_id_penerima	string
+	Jumlah_transfer		int
+}
+type HistoryTransfer struct {
+	NamaPengirim 		string
+	NamaPenerima 		string
+	Jumlah_transfer      int
 }
